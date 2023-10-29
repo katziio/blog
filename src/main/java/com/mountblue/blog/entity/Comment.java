@@ -16,7 +16,7 @@ public class Comment {
     private String email;
     private String comment;
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post postId;
 
     private Date created_at;

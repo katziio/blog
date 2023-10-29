@@ -3,6 +3,7 @@ package com.mountblue.blog.model;
 import com.mountblue.blog.entity.Post;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -12,10 +13,10 @@ public class PostDto {
     private String excerpt;
     private String content;
     private String author;
-    private Date published_at;
-    private boolean is_published;
-    private Date created_at;
-    private Date updated_at;
+    private LocalDateTime published_at;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private boolean isPublished;
 
     public PostDto(Post post)
     {
@@ -27,6 +28,6 @@ public class PostDto {
         this.published_at = post.getPublished_at();
         this.updated_at = post.getUpdated_at();
         this.title = post.getTitle();
-        this.is_published = post.is_published();
+        this.isPublished = post.isPublished();
     }
 }

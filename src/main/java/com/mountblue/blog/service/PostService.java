@@ -22,9 +22,8 @@ public class PostService {
     public PostDto addPost(Post post)
     {
         try {
-            Date date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-            post.setCreated_at(date);
-            post.setUpdated_at(date);
+            post.setCreated_at(LocalDateTime.now());
+            post.setUpdated_at(LocalDateTime.now());
             this.postRepository.save(post);
             return new PostDto(post);
         }
@@ -38,8 +37,7 @@ public class PostService {
     public PostDto updatePost(Post post)
     {
         try {
-            Date date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-            post.setUpdated_at(date);
+            post.setUpdated_at(LocalDateTime.now());
             this.postRepository.save(post);
             return new PostDto(post);
         }

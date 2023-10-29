@@ -1,9 +1,10 @@
 package com.mountblue.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -11,20 +12,29 @@ import java.util.List;
 @Data
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String excerpt;
     private String content;
     private String author;
-    private Date published_at;
-    private boolean is_published;
-    private Date created_at;
-    private Date updated_at;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Tag> tags;
+    private boolean isPublished;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    private LocalDateTime published_at;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    private LocalDateTime created_at;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    private LocalDateTime updated_at;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<Comment> comments;
 
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
+            CascadeType.PERSIST
+    })
+    private List<Tag> tags;
 }

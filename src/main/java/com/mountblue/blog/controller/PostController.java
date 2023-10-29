@@ -16,7 +16,6 @@ public class PostController {
 
     @PostMapping("/add")
     public PostDto addPost(@RequestBody Post post){
-
         return this.postService.addPost(post);
     }
 
