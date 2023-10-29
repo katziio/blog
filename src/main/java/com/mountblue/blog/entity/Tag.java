@@ -1,12 +1,14 @@
 package com.mountblue.blog.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
 
 @Entity
 @Table(name = "TAGS")
+@Data
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
