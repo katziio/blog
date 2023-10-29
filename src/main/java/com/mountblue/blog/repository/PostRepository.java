@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
 
-    @Query("SELECT new com.mountblue.blog.model.PostDto(p) FROM Post")
+    @Query("SELECT new com.mountblue.blog.model.PostDto(p) FROM Post p")
     List<PostDto> findAllPosts(Pageable pageRequest);
 }

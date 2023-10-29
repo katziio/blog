@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -13,8 +14,8 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tag_id;
-    @ManyToOne(targetEntity = Post.class)
-    private Post post;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
+    private List<Post> posts;
     private Date created_at;
     private Date updated_at;
 }

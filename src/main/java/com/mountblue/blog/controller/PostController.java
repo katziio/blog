@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/post")
 public class PostController {
     @Autowired
     private PostService postService;
@@ -44,10 +44,10 @@ public class PostController {
         return this.postService.findPostById(postId);
     }
 
-    @GetMapping()
-    public List<PostDto> getPostListBySort(@RequestParam String searchField, @RequestParam String order,
-                                           @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "10") int size){
-        return null;
-    }
+//    @GetMapping()
+//    public List<PostDto> getPostListBySort(@RequestParam String searchField, @RequestParam String order,
+//                                           @RequestParam(defaultValue = "0") int page,
+//                                           @RequestParam(defaultValue = "10") int size){
+//        return null;
+//    }
 }

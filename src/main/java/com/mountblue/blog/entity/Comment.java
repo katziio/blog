@@ -15,9 +15,10 @@ public class Comment {
     private String name;
     private String email;
     private String comment;
-    private Long post_id;
-    @OneToMany(targetEntity = Post.class, mappedBy = "post_id")
-    private Post post;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post postId;
+
     private Date created_at;
     private Date updated_at;
 }
