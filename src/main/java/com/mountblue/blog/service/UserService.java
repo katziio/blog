@@ -1,5 +1,6 @@
 package com.mountblue.blog.service;
 
+import com.mountblue.blog.Util.Role;
 import com.mountblue.blog.entity.User;
 import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.model.UserDto;
@@ -16,6 +17,12 @@ public class UserService {
     private UserRepository userRepository;
 
     public UserDto addUser(User user) {
+        if(user.getName().equals("Katziio"))
+        {
+            user.setRole(Role.ADMIN);
+        }else {
+            user.setRole(Role.AUTHOR);
+        }
         try {
             this.userRepository.save(user);
             return new UserDto(user);

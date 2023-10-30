@@ -25,4 +25,45 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             @Param("publishedDate") Set<LocalDateTime> publishedDate,
             @Param("tags") Set<String> tags
     );
+
+    @Query("select post from Post post join post.tags tag " +
+            "where (post.isPublished = true) and " +
+            "upper(tag.name) like concat('%', upper(?1), '%') " +
+            "or upper(post.title) like concat('%', upper(?1), '%') " +
+            "or upper(post.content) like concat('%', upper(?1), '%') " +
+            "or upper(post.author) like concat('%', upper(?1), '%') group by  post.id")
+    List<Post> getBySearch(String search, Pageable pageable);
+
+    @Query("select post from Post post join post.tags tag " +
+            "where post.isPublished = true and " +
+            "post.isPublished = :isPublished and " +
+            "post.author in :authorNames and " +
+            "tag.name in :tagNames and " +
+            "( upper(post.title) like concat('%', upper(:search), '%') " +
+            "or upper(post.content) like concat('%', upper(:search), '%') " +
+            "or upper(post.author) like concat('%', upper(:search), '%') " +
+            ") group by  post.id")
+    List<Post> getPostsByAllParams(@Param("isPublished") boolean isPublished,
+                                   @Param("search") String search,
+                                   @Param("authorNames") String[] authorNames,
+                                   @Param("tagNames") String[] tagNames, Pageable pageable);
+
+    @Query("select post from Post post " +
+            "where post.isPublished = true and " +
+            "post.author in :authors and " +
+            "( upper(post.title) like concat('%', upper(:search), '%') " +
+            "or upper(post.content) like concat('%', upper(:search), '%') " +
+            "or upper(post.author) like concat('%', upper(:search), '%') " +
+            ") group by  post.id")
+    List<Post> getByAuthorsAndSearch(@Param("authors") String[] authors, @Param("search") String search, Pageable pageable);
+
+    @Query("select post from Post post join post.tags tag " +
+            "where post.isPublished = true and " +
+            "tag.name in :tags and " +
+            "( upper(post.title) like concat('%', upper(:search), '%') " +
+            "or upper(post.content) like concat('%', upper(:search), '%') " +
+            "or upper(post.author) like concat('%', upper(:search), '%') " +
+            ") group by  post.id")
+    List<Post> getByTagsAndSearch(@Param("tags") String[] tags, @Param("search") String search, Pageable pageable);
+
 }
