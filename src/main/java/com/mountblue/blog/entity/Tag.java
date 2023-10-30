@@ -15,6 +15,8 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long tag_id;
+
+    private String name;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
     private List<Post> posts;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
