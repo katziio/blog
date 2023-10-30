@@ -23,6 +23,11 @@ public class UserService {
         }else {
             user.setRole(Role.AUTHOR);
         }
+        Optional<User> userOptional = this.userRepository.findByUserEmail(user.getEmail());
+        if(userOptional.isPresent())
+        {
+            throw new RuntimeException("User Already Exists");
+        }
         try {
             this.userRepository.save(user);
             return new UserDto(user);
@@ -62,6 +67,18 @@ public class UserService {
             return new UserDto(user.get());
         }else {
             throw new RuntimeException("user not found "+userId);
+        }
+    }
+
+    public UserDto login(String email, String password) {
+        User user = this.userRepository.findByEmailPassword(email,password);
+        if(user !=null)
+        {
+            throw new RuntimeException("User not found");
+        }
+        else{
+
+            return new UserDto(user);
         }
     }
 }

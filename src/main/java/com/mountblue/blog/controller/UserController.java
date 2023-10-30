@@ -12,10 +12,16 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/add")
-    public UserDto addUser(User user)
+    @PostMapping("/signup")
+    public UserDto signUp(User user)
     {
         return this.userService.addUser(user);
+    }
+
+    @GetMapping("/login")
+    public UserDto login(@RequestParam String email,@RequestParam String password)
+    {
+        return this.userService.login(email,password);
     }
 
     @GetMapping("/get/{userId}")
@@ -35,4 +41,5 @@ public class UserController {
     {
         return this.userService.deleteUser(userId);
     }
+
 }
