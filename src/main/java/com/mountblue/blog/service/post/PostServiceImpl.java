@@ -1,4 +1,4 @@
-package com.mountblue.blog.service;
+package com.mountblue.blog.service.post;
 
 import com.mountblue.blog.entity.Post;
 import com.mountblue.blog.entity.Tag;
@@ -7,7 +7,6 @@ import com.mountblue.blog.repository.PostRepository;
 import com.mountblue.blog.repository.TagRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,13 +16,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class PostService {
+public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
 
     @Autowired
     private TagRepository tagRepository;
 
+    @Override
     public PostDto addPost(Post post)
     {
         try {
@@ -38,6 +38,7 @@ public class PostService {
         }
     }
 
+    @Override
     public PostDto updatePost(Post post)
     {
         try {
@@ -51,6 +52,7 @@ public class PostService {
         }
     }
 
+    @Override
     @Transactional
     public PostDto deletePost(Long postId)
     {
@@ -71,6 +73,7 @@ public class PostService {
         return this.postRepository.findAllPosts(pageable);
     }
 
+    @Override
     public PostDto findPostById(Long postId) {
         Optional<Post> post = this.postRepository.findById(postId);
         if(post.isPresent())

@@ -2,7 +2,7 @@ package com.mountblue.blog.controller;
 
 import com.mountblue.blog.entity.User;
 import com.mountblue.blog.model.UserDto;
-import com.mountblue.blog.service.UserService;
+import com.mountblue.blog.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @PostMapping("/signup")
     public UserDto signUp(User user)

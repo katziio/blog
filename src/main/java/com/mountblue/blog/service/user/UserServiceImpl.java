@@ -1,26 +1,25 @@
-package com.mountblue.blog.service;
+package com.mountblue.blog.service.user;
 
 import com.mountblue.blog.Util.Role;
 //import com.mountblue.blog.config.Security;
 import com.mountblue.blog.entity.User;
-import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.model.UserDto;
 import com.mountblue.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
 
 //    @Autowired
 //    private Security security;
 
+    @Override
     public UserDto addUser(User user) {
         if(user.getName().toLowerCase().equals("Katziio".toLowerCase()))
         {
@@ -46,6 +45,7 @@ public class UserService {
         }
     }
 
+    @Override
     public UserDto getUserById(Long userId) {
         Optional<User> user = this.userRepository.findById(userId);
         if(user.isPresent())
@@ -55,7 +55,7 @@ public class UserService {
             throw new RuntimeException("user not found "+userId);
         }
     }
-
+    @Override
     public UserDto updateUser(User user) {
         try {
             this.userRepository.save(user);
@@ -67,6 +67,7 @@ public class UserService {
         }
     }
 
+    @Override
     public UserDto deleteUser(Long userId) {
         Optional<User> user = this.userRepository.findById(userId);
         if(user.isPresent())
@@ -78,6 +79,7 @@ public class UserService {
         }
     }
 
+    @Override
     public UserDto login(String email, String password) {
         Optional<User> user = this.userRepository.findByUserEmail(email);
         if(!user.isPresent())

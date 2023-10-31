@@ -2,7 +2,7 @@ package com.mountblue.blog.controller;
 
 import com.mountblue.blog.entity.Post;
 import com.mountblue.blog.model.PostDto;
-import com.mountblue.blog.service.PostService;
+import com.mountblue.blog.service.post.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/post")
 public class PostController {
     @Autowired
-    private PostService postService;
+    private PostServiceImpl postService;
 
     @PostMapping("/add")
     public PostDto addPost(@RequestBody Post post){
