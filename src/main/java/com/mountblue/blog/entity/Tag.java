@@ -19,8 +19,8 @@ public class Tag {
     private String name;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
     private List<Post> posts;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date created_at;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updated_at;
 }

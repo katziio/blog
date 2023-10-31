@@ -43,6 +43,11 @@ public class PostController {
         return this.postService.findPostById(postId);
     }
 
+    @GetMapping("/get/filter")
+    public List<Post> getPostByTagNames(@RequestParam List<String> tagsNames){
+        return this.postService.filterByTagsNames(tagsNames);
+    }
+
 //    @GetMapping()
 //    public List<PostDto> getPostListBySort(@RequestParam String searchField, @RequestParam String order,
 //                                           @RequestParam(defaultValue = "0") int page,

@@ -57,6 +57,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             ") group by  post.id")
     List<Post> getByAuthorsAndSearch(@Param("authors") String[] authors, @Param("search") String search, Pageable pageable);
 
+    @Query("SELECT p FROM Post p JOIN p.tags t WHERE t.name IN :tagNames")
+    List<Post> findPostsByTagNames(@Param("tagNames") List<String> tagNames);
+
 //    @Query("select post from Post post join post.tags tag " +
 //            "where post.isPublished = true and " +
 //            "tag.name in :tags and " +

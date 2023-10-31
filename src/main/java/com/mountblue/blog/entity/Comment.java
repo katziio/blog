@@ -19,8 +19,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "postId")
     private Post postId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date created_at;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updated_at;
 }

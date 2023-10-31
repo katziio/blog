@@ -29,12 +29,13 @@ public class PostServiceImpl implements PostService {
         try {
             post.setCreated_at(LocalDateTime.now());
             post.setUpdated_at(LocalDateTime.now());
+            this.tagRepository.saveAll(post.getTags());
             this.postRepository.save(post);
             return new PostDto(post);
         }
         catch (Exception e)
         {
-            throw new RuntimeException("post not added");
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -103,6 +104,14 @@ public class PostServiceImpl implements PostService {
             sort = Sort.by(Sort.Order.asc(sortedField));
         }
         return PageRequest.of(page,size, sort);
+    }
+
+    @Override
+    public List<Post> filterByTagsNames(List<String> tags) {
+        List<String> tagsNames = new ArrayList<>();
+        tagsNames.add("first");
+        tagsNames.add("second");
+       return this.postRepository.findPostsByTagNames(tagsNames);
     }
 
     public Set<String> getTagNameList(){
