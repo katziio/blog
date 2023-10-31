@@ -19,12 +19,12 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Query("SELECT new com.mountblue.blog.model.PostDto(p) FROM Post p")
     List<PostDto> findAllPosts(Pageable pageRequest);
 
-    @Query("SELECT p FROM Post p WHERE p.author IN :authors AND p.published_at IN :publishedDate AND p.tags.name IN :tags")
-    List<Post> findPostsByAuthorsAndPublishedDateAndTags(
-            @Param("authors") Set<String> authors,
-            @Param("publishedDate") Set<LocalDateTime> publishedDate,
-            @Param("tags") Set<String> tags
-    );
+//    @Query("SELECT p FROM Post p WHERE p.author IN :authors AND p.published_at IN :publishedDate AND p.tags.name IN :tags")
+//    List<Post> findPostsByAuthorsAndPublishedDateAndTags(
+//            @Param("authors") Set<String> authors,
+//            @Param("publishedDate") Set<LocalDateTime> publishedDate,
+//            @Param("tags") Set<String> tags
+//    );
 
     @Query("select post from Post post join post.tags tag " +
             "where (post.isPublished = true) and " +
@@ -57,13 +57,13 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             ") group by  post.id")
     List<Post> getByAuthorsAndSearch(@Param("authors") String[] authors, @Param("search") String search, Pageable pageable);
 
-    @Query("select post from Post post join post.tags tag " +
-            "where post.isPublished = true and " +
-            "tag.name in :tags and " +
-            "( upper(post.title) like concat('%', upper(:search), '%') " +
-            "or upper(post.content) like concat('%', upper(:search), '%') " +
-            "or upper(post.author) like concat('%', upper(:search), '%') " +
-            ") group by  post.id")
-    List<Post> getByTagsAndSearch(@Param("tags") String[] tags, @Param("search") String search, Pageable pageable);
+//    @Query("select post from Post post join post.tags tag " +
+//            "where post.isPublished = true and " +
+//            "tag.name in :tags and " +
+//            "( upper(post.title) like concat('%', upper(:search), '%') " +
+//            "or upper(post.content) like concat('%', upper(:search), '%') " +
+//            "or upper(post.author) like concat('%', upper(:search), '%') " +
+//            ") group by  post.id")
+//    List<Post> getByTagsAndSearch(@Param("tags") String[] tags, @Param("search") String search, Pageable pageable);
 
 }

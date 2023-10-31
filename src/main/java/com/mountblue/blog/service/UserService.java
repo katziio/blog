@@ -1,11 +1,13 @@
 package com.mountblue.blog.service;
 
 import com.mountblue.blog.Util.Role;
+//import com.mountblue.blog.config.Security;
 import com.mountblue.blog.entity.User;
 import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.model.UserDto;
 import com.mountblue.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,8 +18,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+//    @Autowired
+//    private Security security;
+
     public UserDto addUser(User user) {
-        if(user.getName().equals("Katziio"))
+        if(user.getName().toLowerCase().equals("Katziio".toLowerCase()))
         {
             user.setRole(Role.ADMIN);
         }else {
@@ -29,6 +34,9 @@ public class UserService {
             throw new RuntimeException("User Already Exists");
         }
         try {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String hashedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPassword);
             this.userRepository.save(user);
             return new UserDto(user);
         }
@@ -71,14 +79,18 @@ public class UserService {
     }
 
     public UserDto login(String email, String password) {
-        User user = this.userRepository.findByEmailPassword(email,password);
-        if(user !=null)
+        Optional<User> user = this.userRepository.findByUserEmail(email);
+        if(!user.isPresent())
         {
             throw new RuntimeException("User not found");
         }
         else{
-
-            return new UserDto(user);
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            if (passwordEncoder.matches(password, user.get().getPassword())) {
+                return new UserDto(user.get());
+            } else {
+                throw new RuntimeException("Invalid password");
+            }
         }
     }
 }

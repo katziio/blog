@@ -132,11 +132,11 @@ public class PostService {
         return dateLists;
     }
 
-    public List<Post> filterPost() {
-        Set<String> authorNameList = this.getAuthorNameList();
-        Set<String> tagNameList = this.getTagNameList();
-        Set<LocalDateTime> dateList = this.getDateList();
-        return this.postRepository.
-                findPostsByAuthorsAndPublishedDateAndTags(authorNameList,dateList,tagNameList);
-    }
+//    public List<Post> filterPost() {
+//        Set<String> authorNameList = this.getAuthorNameList();
+//        Set<String> tagNameList = this.getTagNameList();
+//        Set<LocalDateTime> dateList = this.getDateList();
+//        return this.postRepository.
+//                findPostsByAuthorsAndPublishedDateAndTags(authorNameList,dateList,tagNameList);
+//    }
 }

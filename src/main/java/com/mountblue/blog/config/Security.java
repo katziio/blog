@@ -14,14 +14,7 @@ public class Security {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/post/add/**")
-                        .hasAnyAuthority(String.valueOf(Role.AUTHOR),String.valueOf(Role.ADMIN))
-                        .requestMatchers("post/delete/**")
-                        .hasAnyAuthority(String.valueOf(Role.AUTHOR),String.valueOf(Role.ADMIN))
-                        .requestMatchers("/comment/create").permitAll()
-                        .requestMatchers("/comment/delete").hasAnyAuthority(String.valueOf(Role.AUTHOR),String.valueOf(Role.ADMIN))
-                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
