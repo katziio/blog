@@ -32,6 +32,6 @@ public class PostDto {
         this.updated_at = post.getUpdatedAt();
         this.title = post.getTitle();
         this.isPublished = post.isPublished();
-        this.commentList = post.getComments();
+//        this.commentList = post.getComments();
     }
 }

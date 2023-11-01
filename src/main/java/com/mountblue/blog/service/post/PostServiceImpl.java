@@ -78,8 +78,6 @@ public class PostServiceImpl implements PostService {
     public PostDto findPostById(Long postId) {
         Optional<Post> post = this.postRepository.findById(postId);
         if (post.isPresent()) {
-            System.out.println(post.get().toString());
-            System.out.println(post.get().getComments().size());
             return new PostDto(post.get());
         } else {
             throw new ServerException("Post not found for id" + postId);
