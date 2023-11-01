@@ -27,9 +27,11 @@ public class PostServiceImpl implements PostService {
     public PostDto addPost(Post post)
     {
         try {
-            post.setCreated_at(LocalDateTime.now());
-            post.setUpdated_at(LocalDateTime.now());
-            this.tagRepository.saveAll(post.getTags());
+            post.setCreatedAt(LocalDateTime.now());
+            post.setUpdatedAt(LocalDateTime.now());
+            post.setPublishedAt(LocalDateTime.now());
+            List<Tag> tagList = this.findOrCreateTaglist(post.getTags());
+            post.setTags(tagList);
             this.postRepository.save(post);
             return new PostDto(post);
         }
@@ -43,7 +45,7 @@ public class PostServiceImpl implements PostService {
     public PostDto updatePost(Post post)
     {
         try {
-            post.setUpdated_at(LocalDateTime.now());
+            post.setUpdatedAt(LocalDateTime.now());
             this.postRepository.save(post);
             return new PostDto(post);
         }
@@ -90,9 +92,9 @@ public class PostServiceImpl implements PostService {
         Map<String, String> sortFieldMapping = new HashMap<>();
         sortFieldMapping.put("title", "title");
         sortFieldMapping.put("author", "author");
-        sortFieldMapping.put("published", "published_at");
-        sortFieldMapping.put("created", "created_at");
-        sortFieldMapping.put("updated", "updated_at");
+        sortFieldMapping.put("published", "publishedAt");
+        sortFieldMapping.put("created", "createdAt");
+        sortFieldMapping.put("updated", "updatedAt");
         String sortedField = sortFieldMapping.get(sortField);
         if (sortedField == null) {
             sortedField = "author";
@@ -139,11 +141,27 @@ public class PostServiceImpl implements PostService {
         Set<LocalDateTime> dateLists = new HashSet<>();
         for (Post post : posts)
         {
-            dateLists.add(post.getCreated_at());
+            dateLists.add(post.getCreatedAt());
         }
         return dateLists;
     }
 
+    public List<Tag> findOrCreateTaglist(List<Tag> tags) {
+        List<Tag> tagList = new ArrayList<>();
+        for (Tag tag : tags) {
+            Tag tagDb = tagRepository.findByName(tag.getName());
+            if (tagDb == null) {
+                Tag newTag = new Tag();
+                newTag.setName(tag.getName());
+                newTag.setCreatedAt(LocalDateTime.now());
+                newTag.setCreatedAt(LocalDateTime.now());
+                tagList.add(newTag);
+            }else {
+                tagList.add(tagDb);
+            }
+        }
+        return tagList;
+    }
 //    public List<Post> filterPost() {
 //        Set<String> authorNameList = this.getAuthorNameList();
 //        Set<String> tagNameList = this.getTagNameList();

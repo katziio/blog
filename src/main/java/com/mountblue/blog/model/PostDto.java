@@ -23,10 +23,10 @@ public class PostDto {
         this.author = post.getAuthor();
         this.content = post.getContent();
         this.id = post.getId();
-        this.created_at = post.getCreated_at();
+        this.created_at = post.getCreatedAt();
         this.excerpt = post.getExcerpt();
-        this.published_at = post.getPublished_at();
-        this.updated_at = post.getUpdated_at();
+        this.published_at = post.getPublishedAt();
+        this.updated_at = post.getUpdatedAt();
         this.title = post.getTitle();
         this.isPublished = post.isPublished();
     }

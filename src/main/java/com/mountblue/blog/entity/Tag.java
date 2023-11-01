@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -14,13 +15,13 @@ import java.util.List;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long tag_id;
+    private Long id;
 
     private String name;
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
     private List<Post> posts;
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date created_at;
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updated_at;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedAt;
 }
