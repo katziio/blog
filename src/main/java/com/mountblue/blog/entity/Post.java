@@ -3,6 +3,7 @@ package com.mountblue.blog.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "POSTS")
 @Data
+@ToString
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +34,6 @@ public class Post {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<Comment> comments;
 
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {
-            CascadeType.PERSIST
-    })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     private List<Tag> tags;
 }

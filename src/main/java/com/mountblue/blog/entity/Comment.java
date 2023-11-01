@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "COMMENTS")
 @Data
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
@@ -20,7 +20,7 @@ public class Comment {
     @JoinColumn(name = "postId")
     private Post postId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 }

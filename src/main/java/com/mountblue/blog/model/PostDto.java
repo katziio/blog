@@ -1,10 +1,12 @@
 package com.mountblue.blog.model;
 
+import com.mountblue.blog.entity.Comment;
 import com.mountblue.blog.entity.Post;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class PostDto {
@@ -17,6 +19,7 @@ public class PostDto {
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     private boolean isPublished;
+    private List<Comment> commentList;
 
     public PostDto(Post post)
     {
@@ -29,5 +32,6 @@ public class PostDto {
         this.updated_at = post.getUpdatedAt();
         this.title = post.getTitle();
         this.isPublished = post.isPublished();
+        this.commentList = post.getComments();
     }
 }

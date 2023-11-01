@@ -1,8 +1,10 @@
 package com.mountblue.blog.service.post;
 
+import com.mountblue.blog.entity.Comment;
 import com.mountblue.blog.entity.Post;
 import com.mountblue.blog.entity.Tag;
 import com.mountblue.blog.model.PostDto;
+import com.mountblue.blog.repository.CommentRepository;
 import com.mountblue.blog.repository.PostRepository;
 import com.mountblue.blog.repository.TagRepository;
 import jakarta.transaction.Transactional;
@@ -23,72 +25,68 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     @Override
-    public PostDto addPost(Post post)
-    {
+    public PostDto addPost(Post post) {
         try {
             post.setCreatedAt(LocalDateTime.now());
             post.setUpdatedAt(LocalDateTime.now());
             post.setPublishedAt(LocalDateTime.now());
-            List<Tag> tagList = this.findOrCreateTaglist(post.getTags());
-            post.setTags(tagList);
+            if (post.getTags() != null) {
+                List<Tag> tagList = this.findOrCreateTaglist(post.getTags());
+
+                post.setTags(tagList);
+            }
             this.postRepository.save(post);
             return new PostDto(post);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public PostDto updatePost(Post post)
-    {
+    public PostDto updatePost(Post post) {
         try {
             post.setUpdatedAt(LocalDateTime.now());
             this.postRepository.save(post);
             return new PostDto(post);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new RuntimeException("post not updated");
         }
     }
 
     @Override
     @Transactional
-    public PostDto deletePost(Long postId)
-    {
+    public PostDto deletePost(Long postId) {
         Optional<Post> post = this.postRepository.findById(postId);
-        if(post.isPresent())
-        {
+        if (post.isPresent()) {
             this.postRepository.delete(post.get());
             return new PostDto(post.get());
-        }
-        else {
+        } else {
             throw new RuntimeException("post not deleted");
         }
     }
 
-    public List<PostDto> getPostLists(int page,int size,String sortBy,String orderBy)
-    {
-        Pageable pageable = this.pageable(page,size,sortBy,orderBy);
+    public List<PostDto> getPostLists(int page, int size, String sortBy, String orderBy) {
+        Pageable pageable = this.pageable(page, size, sortBy, orderBy);
         return this.postRepository.findAllPosts(pageable);
     }
 
     @Override
     public PostDto findPostById(Long postId) {
         Optional<Post> post = this.postRepository.findById(postId);
-        if(post.isPresent())
-        {
+        if (post.isPresent()) {
+            System.out.println(post.get().toString());
+            System.out.println(post.get().getComments().size());
             return new PostDto(post.get());
-        }else {
-            throw new RuntimeException("Post not found for id"+postId);
+        } else {
+            throw new RuntimeException("Post not found for id" + postId);
         }
     }
 
-    public Pageable pageable(int page, int size, String sortField,String orderBy)
-    {
+    public Pageable pageable(int page, int size, String sortField, String orderBy) {
         Map<String, String> sortFieldMapping = new HashMap<>();
         sortFieldMapping.put("title", "title");
         sortFieldMapping.put("author", "author");
@@ -100,12 +98,12 @@ public class PostServiceImpl implements PostService {
             sortedField = "author";
         }
         Sort sort = null;
-        if(orderBy.equals("desc")) {
+        if (orderBy.equals("desc")) {
             sort = Sort.by(Sort.Order.desc(sortedField));
-        }else {
+        } else {
             sort = Sort.by(Sort.Order.asc(sortedField));
         }
-        return PageRequest.of(page,size, sort);
+        return PageRequest.of(page, size, sort);
     }
 
     @Override
@@ -113,40 +111,40 @@ public class PostServiceImpl implements PostService {
         List<String> tagsNames = new ArrayList<>();
         tagsNames.add("first");
         tagsNames.add("second");
-       return this.postRepository.findPostsByTagNames(tagsNames);
+        return this.postRepository.findPostsByTagNames(tagsNames);
     }
 
-    public Set<String> getTagNameList(){
+    public Set<String> getTagNameList() {
         List<Tag> tags = this.tagRepository.findAll();
         Set<String> tagList = new HashSet<>();
-        for (Tag tag:tags)
-        {
+        for (Tag tag : tags) {
             tagList.add(tag.getName());
         }
         return tagList;
     }
 
-    public Set<String> getAuthorNameList(){
+    public Set<String> getAuthorNameList() {
         List<Post> posts = this.postRepository.findAll();
         Set<String> authorNameList = new HashSet<>();
-        for (Post post : posts)
-        {
+        for (Post post : posts) {
             authorNameList.add(post.getAuthor());
         }
         return authorNameList;
     }
 
-    public Set<LocalDateTime> getDateList(){
+    public Set<LocalDateTime> getDateList() {
         List<Post> posts = this.postRepository.findAll();
         Set<LocalDateTime> dateLists = new HashSet<>();
-        for (Post post : posts)
-        {
+        for (Post post : posts) {
             dateLists.add(post.getCreatedAt());
         }
         return dateLists;
     }
 
     public List<Tag> findOrCreateTaglist(List<Tag> tags) {
+        if (tags.isEmpty()) {
+            return null;
+        }
         List<Tag> tagList = new ArrayList<>();
         for (Tag tag : tags) {
             Tag tagDb = tagRepository.findByName(tag.getName());
@@ -156,12 +154,13 @@ public class PostServiceImpl implements PostService {
                 newTag.setCreatedAt(LocalDateTime.now());
                 newTag.setCreatedAt(LocalDateTime.now());
                 tagList.add(newTag);
-            }else {
+            } else {
                 tagList.add(tagDb);
             }
         }
         return tagList;
     }
+
 //    public List<Post> filterPost() {
 //        Set<String> authorNameList = this.getAuthorNameList();
 //        Set<String> tagNameList = this.getTagNameList();
