@@ -20,7 +20,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
         Optional<User> user = userRepository.findByUsername(username);
         if(user.isPresent())
         {
-            CustomUserDetails customUserDetails = new CustomUserDetails(user.get());
+            CustomUserDetails customUserDetails = new CustomUserDetails();
+            customUserDetails.setUser(user.get());
             return customUserDetails;
         }else {
             throw new RuntimeException("User Not found");
