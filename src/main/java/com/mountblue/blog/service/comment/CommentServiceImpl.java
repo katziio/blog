@@ -2,6 +2,7 @@ package com.mountblue.blog.service.comment;
 
 import com.mountblue.blog.entity.Comment;
 import com.mountblue.blog.entity.Post;
+import com.mountblue.blog.exception.DataNotFoundException;
 import com.mountblue.blog.repository.CommentRepository;
 import com.mountblue.blog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class CommentServiceImpl implements CommentService{
             System.out.println(postOptional.get().toString());
             return postOptional.get().getComments();
         } else {
-            throw new RuntimeException("Post not found");
+            throw new DataNotFoundException("Post not found");
         }
     }
 
@@ -37,9 +38,9 @@ public class CommentServiceImpl implements CommentService{
                     return comment;
                 }
             }
-            throw new RuntimeException("Comment Not found");
+            throw new DataNotFoundException("Comment Not found");
         } else {
-            throw new RuntimeException("Post not found");
+            throw new DataNotFoundException("Post not found");
         }
     }
 
@@ -52,10 +53,10 @@ public class CommentServiceImpl implements CommentService{
                 Comment commentDb = this.commentRepository.save(comment);
                 return commentDb;
             } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
+                throw new DataNotFoundException(e.getMessage());
             }
         } else {
-            throw new RuntimeException("Post not found");
+            throw new DataNotFoundException("Post not found");
         }
     }
 
@@ -69,14 +70,14 @@ public class CommentServiceImpl implements CommentService{
                     Comment commentDb = this.commentRepository.save(comment);
                     return commentDb;
                 } catch (Exception e) {
-                    throw new RuntimeException("Comment not added" + "\n" + e.getMessage());
+                    throw new DataNotFoundException("Comment not added"+ e.getMessage());
                 }
             } else {
-                throw new RuntimeException("Comment not found");
+                throw new DataNotFoundException("Comment not found");
             }
 
         } else {
-            throw new RuntimeException("Post not found");
+            throw new DataNotFoundException("Post not found");
         }
     }
 
@@ -89,14 +90,14 @@ public class CommentServiceImpl implements CommentService{
                     this.commentRepository.deleteById(commentId);
                     return true;
                 } catch (Exception e) {
-                    throw new RuntimeException("Comment not added" + "\n" + e.getMessage());
+                    throw new DataNotFoundException("Comment not added"+ e.getMessage());
                 }
             } else {
-                throw new RuntimeException("Comment not found");
+                throw new DataNotFoundException("Comment not found");
             }
 
         } else {
-            throw new RuntimeException("Post not found");
+            throw new DataNotFoundException("Post not found");
         }
     }
 }

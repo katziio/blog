@@ -1,8 +1,8 @@
 package com.mountblue.blog.service.post;
 
-import com.mountblue.blog.entity.Comment;
 import com.mountblue.blog.entity.Post;
 import com.mountblue.blog.entity.Tag;
+import com.mountblue.blog.exception.ServerException;
 import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.repository.CommentRepository;
 import com.mountblue.blog.repository.PostRepository;
@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
             this.postRepository.save(post);
             return new PostDto(post);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new ServerException("post not added" + e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
             this.postRepository.save(post);
             return new PostDto(post);
         } catch (Exception e) {
-            throw new RuntimeException("post not updated");
+            throw new ServerException("Post not Updated" +e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
             this.postRepository.delete(post.get());
             return new PostDto(post.get());
         } else {
-            throw new RuntimeException("post not deleted");
+            throw new ServerException("post not deleted");
         }
     }
 
@@ -82,7 +82,7 @@ public class PostServiceImpl implements PostService {
             System.out.println(post.get().getComments().size());
             return new PostDto(post.get());
         } else {
-            throw new RuntimeException("Post not found for id" + postId);
+            throw new ServerException("Post not found for id" + postId);
         }
     }
 
