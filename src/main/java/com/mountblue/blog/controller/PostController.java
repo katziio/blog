@@ -6,7 +6,9 @@ import com.mountblue.blog.service.post.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/post")
@@ -46,6 +48,24 @@ public class PostController {
     @GetMapping("/get/filter")
     public List<Post> getPostByTagNames(@RequestParam List<String> tagsNames){
         return this.postService.filterByTagsNames(tagsNames);
+    }
+
+    @GetMapping("/get/filter/date")
+    public Set<LocalDateTime> getDateForFilter()
+    {
+        return this.postService.getDateList();
+    }
+
+    @GetMapping("/get/filter/author")
+    public Set<String> getAuthorForFilter()
+    {
+        return this.postService.getAuthorNameList();
+    }
+
+    @GetMapping("/get/filter/tags")
+    public Set<String> getTagForFilter()
+    {
+        return this.postService.getTagNameList();
     }
 
 //    @GetMapping()

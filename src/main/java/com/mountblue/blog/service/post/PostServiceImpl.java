@@ -4,7 +4,6 @@ import com.mountblue.blog.entity.Post;
 import com.mountblue.blog.entity.Tag;
 import com.mountblue.blog.exception.ServerException;
 import com.mountblue.blog.model.PostDto;
-import com.mountblue.blog.repository.CommentRepository;
 import com.mountblue.blog.repository.PostRepository;
 import com.mountblue.blog.repository.TagRepository;
 import jakarta.transaction.Transactional;
@@ -25,9 +24,6 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private TagRepository tagRepository;
 
-    @Autowired
-    private CommentRepository commentRepository;
-
     @Override
     public PostDto addPost(Post post) {
         try {
@@ -36,7 +32,6 @@ public class PostServiceImpl implements PostService {
             post.setPublishedAt(LocalDateTime.now());
             if (post.getTags() != null) {
                 List<Tag> tagList = this.findOrCreateTaglist(post.getTags());
-
                 post.setTags(tagList);
             }
             this.postRepository.save(post);
@@ -116,8 +111,10 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = this.tagRepository.findAll();
         Set<String> tagList = new HashSet<>();
         for (Tag tag : tags) {
+            System.out.println(tag.getName());
             tagList.add(tag.getName());
         }
+        System.out.println(tagList.size());
         return tagList;
     }
 

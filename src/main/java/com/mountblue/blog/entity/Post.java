@@ -34,6 +34,6 @@ public class Post {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<Comment> comments;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Tag> tags;
 }
