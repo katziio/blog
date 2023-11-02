@@ -1,9 +1,11 @@
 package com.mountblue.blog.controller;
 
 import com.mountblue.blog.entity.Post;
+import com.mountblue.blog.exception.DataNotFoundException;
 import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.service.post.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -49,6 +51,10 @@ public class PostController {
     public List<Post> getPostByTagNames(@RequestParam List<String> tagsNames){
         return this.postService.filterByTagsNames(tagsNames);
     }
+    @GetMapping("/get/filter/byAuthor")
+    public List<Post> getPostByAuthor(@RequestParam List<String> tagsNames){
+        return this.postService.filterByTagsNames(tagsNames);
+    }
 
     @GetMapping("/get/filter/date")
     public Set<LocalDateTime> getDateForFilter()
@@ -68,6 +74,21 @@ public class PostController {
         return this.postService.getTagNameList();
     }
 
+
+    @GetMapping("/search/{keyword}")
+    public List<Post> findByKeyword(@PathVariable String keyword)
+    {
+        System.out.println("hello");
+        try {
+            return this.postService.findByKeyword(keyword);
+
+        }
+        catch (Exception e)
+        {
+            System.out.println( "Error calling function "+ e.getLocalizedMessage());
+            throw new DataNotFoundException( "Error calling function "+ e.getLocalizedMessage());
+        }
+    }
 //    @GetMapping()
 //    public List<PostDto> getPostListBySort(@RequestParam String searchField, @RequestParam String order,
 //                                           @RequestParam(defaultValue = "0") int page,

@@ -57,8 +57,14 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             ") group by  post.id")
     List<Post> getByAuthorsAndSearch(@Param("authors") String[] authors, @Param("search") String search, Pageable pageable);
 
-    @Query("SELECT p FROM Post p JOIN p.tags t WHERE t.name IN :tagNames")
+    @Query("SELECT p FROM Post p WHERE p.tags IN (SELECT t FROM Tag t WHERE t.name IN :tagNames)")
     List<Post> findPostsByTagNames(@Param("tagNames") List<String> tagNames);
+
+    @Query("SELECT p FROM Post p WHERE p.author IN :authorList")
+    List<Post> findPostsByAuthorNames(@Param("authorList") String[] authorList);
+
+    @Query("SELECT p FROM Post p WHERE CONCAT(p.title,' ', p.content,' ', p.author) LIKE %?1%")
+    public List<Post> searchByKeyword(String keyword);
 
 //    @Query("select post from Post post join post.tags tag " +
 //            "where post.isPublished = true and " +

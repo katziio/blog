@@ -2,6 +2,7 @@ package com.mountblue.blog.service.post;
 
 import com.mountblue.blog.entity.Post;
 import com.mountblue.blog.entity.Tag;
+import com.mountblue.blog.exception.DataNotFoundException;
 import com.mountblue.blog.exception.ServerException;
 import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.repository.PostRepository;
@@ -101,17 +102,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> filterByTagsNames(List<String> tags) {
-        List<String> tagsNames = new ArrayList<>();
-        tagsNames.add("first");
-        tagsNames.add("second");
-        return this.postRepository.findPostsByTagNames(tagsNames);
+//        List<String> tagsNames = new ArrayList<>();
+//        tagsNames.add("first");
+//        tagsNames.add("second");
+        return this.postRepository.findPostsByTagNames(tags);
+    }
+
+    public List<Post> filterByAuthor(List<String> authorList) {
+        String[] a = (String[]) authorList.toArray();
+        return this.postRepository.findPostsByAuthorNames(a);
     }
 
     public Set<String> getTagNameList() {
         List<Tag> tags = this.tagRepository.findAll();
         Set<String> tagList = new HashSet<>();
         for (Tag tag : tags) {
-            System.out.println(tag.getName());
             tagList.add(tag.getName());
         }
         System.out.println(tagList.size());
@@ -154,6 +159,16 @@ public class PostServiceImpl implements PostService {
             }
         }
         return tagList;
+    }
+
+    public List<Post> findByKeyword(String keyword)
+    {
+        try {
+            return this.postRepository.searchByKeyword(keyword);
+        }catch (Exception e)
+        {
+            throw new DataNotFoundException(e.getMessage());
+        }
     }
 
 //    public List<Post> filterPost() {
