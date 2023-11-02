@@ -5,7 +5,6 @@ import com.mountblue.blog.exception.DataNotFoundException;
 import com.mountblue.blog.model.PostDto;
 import com.mountblue.blog.service.post.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -48,12 +47,12 @@ public class PostController {
     }
 
     @GetMapping("/get/filter")
-    public List<Post> getPostByTagNames(@RequestParam List<String> tagsNames){
+    public List<Post> getPostByTagNames(@RequestParam String[] tagsNames){
         return this.postService.filterByTagsNames(tagsNames);
     }
     @GetMapping("/get/filter/byAuthor")
-    public List<Post> getPostByAuthor(@RequestParam List<String> tagsNames){
-        return this.postService.filterByTagsNames(tagsNames);
+    public List<Post> getPostByAuthor(@RequestParam String[] authorNames){
+        return this.postService.filterByAuthor(authorNames);
     }
 
     @GetMapping("/get/filter/date")

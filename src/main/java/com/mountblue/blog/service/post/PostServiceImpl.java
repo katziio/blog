@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
             this.postRepository.save(post);
             return new PostDto(post);
         } catch (Exception e) {
-            throw new ServerException("Post not Updated" +e.getMessage());
+            throw new ServerException("Post not Updated" + e.getMessage());
         }
     }
 
@@ -101,16 +101,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> filterByTagsNames(List<String> tags) {
-//        List<String> tagsNames = new ArrayList<>();
-//        tagsNames.add("first");
-//        tagsNames.add("second");
-        return this.postRepository.findPostsByTagNames(tags);
+    public List<Post> filterByTagsNames(String[] tags) {
+        try {
+            System.out.println(tags.length);
+            return this.postRepository.findPostsByTagNames(tags);
+        } catch (Exception e) {
+            throw new DataNotFoundException(e.getLocalizedMessage());
+        }
     }
 
-    public List<Post> filterByAuthor(List<String> authorList) {
-        String[] a = (String[]) authorList.toArray();
-        return this.postRepository.findPostsByAuthorNames(a);
+    public List<Post> filterByAuthor(String[] authorList) {
+        try {
+            List<Post> posts = this.postRepository.getByAuthors(authorList);
+            return posts;
+        } catch (Exception e) {
+            throw new DataNotFoundException(e.getLocalizedMessage());
+        }
     }
 
     public Set<String> getTagNameList() {
@@ -161,12 +167,10 @@ public class PostServiceImpl implements PostService {
         return tagList;
     }
 
-    public List<Post> findByKeyword(String keyword)
-    {
+    public List<Post> findByKeyword(String keyword) {
         try {
             return this.postRepository.searchByKeyword(keyword);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new DataNotFoundException(e.getMessage());
         }
     }

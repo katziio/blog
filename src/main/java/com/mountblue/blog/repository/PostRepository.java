@@ -8,10 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
@@ -57,11 +54,16 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             ") group by  post.id")
     List<Post> getByAuthorsAndSearch(@Param("authors") String[] authors, @Param("search") String search, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.tags IN (SELECT t FROM Tag t WHERE t.name IN :tagNames)")
-    List<Post> findPostsByTagNames(@Param("tagNames") List<String> tagNames);
+//    @Query("SELECT p FROM Post p JOIN p.tags t WHERE t.name IN :tagNames")
+//    List<Post> findPostsByTagNames(@Param("tagNames") String[] tagNames);
 
-    @Query("SELECT p FROM Post p WHERE p.author IN :authorList")
-    List<Post> findPostsByAuthorNames(@Param("authorList") String[] authorList);
+    @Query("select post from Post post join post.tags tag where post.isPublished=true and tag.name in :tags")
+    List<Post> findPostsByTagNames(@Param("tags") String[] tags);
+//    @Query("SELECT p FROM Post p WHERE p.author IN :authorList")
+    @Query("select post from Post post WHERE post.author in :authors")
+    List<Post> getByAuthors(@Param("authors") String[] authors);
+
+//    List<Post> findPostsByAuthorNames(@Param("authorList") String[] authorList);
 
     @Query("SELECT p FROM Post p WHERE CONCAT(p.title,' ', p.content,' ', p.author) LIKE %?1%")
     public List<Post> searchByKeyword(String keyword);
