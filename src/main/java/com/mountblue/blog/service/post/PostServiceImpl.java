@@ -101,18 +101,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> filterByTagsNames(String[] tags) {
+    public List<PostDto> filterByTagsNames(String[] tags) {
         try {
-            System.out.println(tags.length);
-            return this.postRepository.findPostsByTagNames(tags);
+            List<PostDto> postList =  this.postRepository.findPostsByTagNames(tags);
+            System.out.println(postList.size());
+            return postList;
         } catch (Exception e) {
             throw new DataNotFoundException(e.getLocalizedMessage());
         }
     }
 
-    public List<Post> filterByAuthor(String[] authorList) {
+    public List<PostDto> filterByAuthor(String[] authorList) {
         try {
-            List<Post> posts = this.postRepository.getByAuthors(authorList);
+            List<PostDto> posts = this.postRepository.getByAuthors(authorList);
             return posts;
         } catch (Exception e) {
             throw new DataNotFoundException(e.getLocalizedMessage());
@@ -130,18 +131,18 @@ public class PostServiceImpl implements PostService {
     }
 
     public Set<String> getAuthorNameList() {
-        List<Post> posts = this.postRepository.findAll();
+        List<PostDto> posts = this.postRepository.findAllPosts();
         Set<String> authorNameList = new HashSet<>();
-        for (Post post : posts) {
+        for (PostDto post : posts) {
             authorNameList.add(post.getAuthor());
         }
         return authorNameList;
     }
 
     public Set<LocalDateTime> getDateList() {
-        List<Post> posts = this.postRepository.findAll();
+        List<PostDto> posts = this.postRepository.findAllPosts();
         Set<LocalDateTime> dateLists = new HashSet<>();
-        for (Post post : posts) {
+        for (PostDto post : posts) {
             dateLists.add(post.getCreatedAt());
         }
         return dateLists;
@@ -167,15 +168,16 @@ public class PostServiceImpl implements PostService {
         return tagList;
     }
 
-    public List<Post> findByKeyword(String keyword) {
+    public List<PostDto> findByKeyword(String keyword) {
         try {
-            return this.postRepository.searchByKeyword(keyword);
+            List<PostDto> postList = this.postRepository.searchByKeyword(keyword);
+            return postList;
         } catch (Exception e) {
             throw new DataNotFoundException(e.getMessage());
         }
     }
 
-    public List<Post> filterByDate(LocalDateTime[] date) {
+    public List<PostDto> filterByDate(LocalDateTime[] date) {
         try {
             return this.postRepository.findByDate(date);
         }

@@ -17,12 +17,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Query("SELECT new com.mountblue.blog.model.PostDto(p) FROM Post p")
     List<PostDto> findAllPosts(Pageable pageRequest);
 
-//    @Query("SELECT p FROM Post p WHERE p.author IN :authors AND p.published_at IN :publishedDate AND p.tags.name IN :tags")
-//    List<Post> findPostsByAuthorsAndPublishedDateAndTags(
-//            @Param("authors") Set<String> authors,
-//            @Param("publishedDate") Set<LocalDateTime> publishedDate,
-//            @Param("tags") Set<String> tags
-//    );
+
+    @Query("SELECT new com.mountblue.blog.model.PostDto(p) FROM Post p")
+    List<PostDto> findAllPosts();
 
     @Query("select post from Post post join post.tags tag " +
             "where (post.isPublished = true) and " +
@@ -55,30 +52,15 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             ") group by  post.id")
     List<Post> getByAuthorsAndSearch(@Param("authors") String[] authors, @Param("search") String search, Pageable pageable);
 
-//    @Query("SELECT p FROM Post p JOIN p.tags t WHERE t.name IN :tagNames")
-//    List<Post> findPostsByTagNames(@Param("tagNames") String[] tagNames);
+    @Query("select new com.mountblue.blog.model.PostDto(p) from Post p join p.tags tag where p.isPublished=true and tag.name in :tags")
+    List<PostDto> findPostsByTagNames(@Param("tags") String[] tags);
 
-    @Query("select post from Post post join post.tags tag where post.isPublished=true and tag.name in :tags")
-    List<Post> findPostsByTagNames(@Param("tags") String[] tags);
-//    @Query("SELECT p FROM Post p WHERE p.author IN :authorList")
-    @Query("select post from Post post WHERE post.author in :authors")
-    List<Post> getByAuthors(@Param("authors") String[] authors);
+    @Query("select new com.mountblue.blog.model.PostDto(p) from Post p WHERE p.author in :authors")
+    List<PostDto> getByAuthors(@Param("authors") String[] authors);
 
-//    List<Post> findPostsByAuthorNames(@Param("authorList") String[] authorList);
+    @Query("SELECT new com.mountblue.blog.model.PostDto(p) FROM Post p JOIN p.tags t WHERE CONCAT(p.title, ' ', p.content, ' ', p.author) LIKE %:keyword%")
+    public List<PostDto> searchByKeyword(@Param("keyword") String keyword);
 
-    @Query("SELECT p FROM Post p WHERE CONCAT(p.title,' ', p.content,' ', p.author) LIKE %?1%")
-    public List<Post> searchByKeyword(String keyword);
-
-    @Query("select post from Post post WHERE post.createdAt IN :date")
-    List<Post> findByDate(@Param("date") LocalDateTime[] date);
-
-//    @Query("select post from Post post join post.tags tag " +
-//            "where post.isPublished = true and " +
-//            "tag.name in :tags and " +
-//            "( upper(post.title) like concat('%', upper(:search), '%') " +
-//            "or upper(post.content) like concat('%', upper(:search), '%') " +
-//            "or upper(post.author) like concat('%', upper(:search), '%') " +
-//            ") group by  post.id")
-//    List<Post> getByTagsAndSearch(@Param("tags") String[] tags, @Param("search") String search, Pageable pageable);
-
+    @Query("select new com.mountblue.blog.model.PostDto(p) from Post p WHERE p.createdAt IN :date")
+    List<PostDto> findByDate(@Param("date") LocalDateTime[] date);
 }

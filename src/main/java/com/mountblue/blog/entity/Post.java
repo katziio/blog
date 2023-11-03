@@ -1,6 +1,7 @@
 package com.mountblue.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "POSTS")
 @Data
-@ToString
+//@ToString
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +33,24 @@ public class Post {
     private LocalDateTime updatedAt;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+//    @JsonIgnore
     private List<Comment> comments;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JsonIgnore
     private List<Tag> tags;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", excerpt='" + excerpt + '\'' +
+                ", isPublished=" + isPublished +
+                ", publishedAt=" + publishedAt +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
+
 }

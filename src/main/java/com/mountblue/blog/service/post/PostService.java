@@ -12,5 +12,5 @@ public interface PostService {
     public PostDto deletePost(Long postId);
     public PostDto findPostById(Long postId);
     public Pageable pageable(int page, int size, String sortField, String orderBy);
-    public List<Post> filterByTagsNames(String[] tags);
+    public List<PostDto> filterByTagsNames(String[] tags);
 }

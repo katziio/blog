@@ -47,16 +47,16 @@ public class PostController {
     }
 
     @GetMapping("/get/filter")
-    public List<Post> getPostByTagNames(@RequestParam String[] tagsNames){
+    public List<PostDto> getPostByTagNames(@RequestParam String[] tagsNames){
         return this.postService.filterByTagsNames(tagsNames);
     }
     @GetMapping("/get/filter/byAuthor")
-    public List<Post> getPostByAuthor(@RequestParam String[] authorNames){
+    public List<PostDto> getPostByAuthor(@RequestParam String[] authorNames){
         return this.postService.filterByAuthor(authorNames);
     }
 
     @GetMapping("/get/filter/byDate")
-    public List<Post> getPostByAuthor(@RequestParam LocalDateTime[] date){
+    public List<PostDto> getPostByAuthor(@RequestParam LocalDateTime[] date){
         return this.postService.filterByDate(date);
     }
 
@@ -80,7 +80,7 @@ public class PostController {
 
 
     @GetMapping("/search/{keyword}")
-    public List<Post> findByKeyword(@PathVariable String keyword)
+    public List<PostDto> findByKeyword(@PathVariable String keyword)
     {
             return this.postService.findByKeyword(keyword);
     }

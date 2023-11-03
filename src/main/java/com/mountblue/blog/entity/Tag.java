@@ -1,6 +1,7 @@
 package com.mountblue.blog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +17,8 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "tags")
     private List<Post> posts;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
