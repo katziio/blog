@@ -175,11 +175,13 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-//    public List<Post> filterPost() {
-//        Set<String> authorNameList = this.getAuthorNameList();
-//        Set<String> tagNameList = this.getTagNameList();
-//        Set<LocalDateTime> dateList = this.getDateList();
-//        return this.postRepository.
-//                findPostsByAuthorsAndPublishedDateAndTags(authorNameList,dateList,tagNameList);
-//    }
+    public List<Post> filterByDate(LocalDateTime[] date) {
+        try {
+            return this.postRepository.findByDate(date);
+        }
+        catch (Exception e)
+        {
+            throw new DataNotFoundException("helllo");
+        }
+    }
 }

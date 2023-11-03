@@ -55,6 +55,11 @@ public class PostController {
         return this.postService.filterByAuthor(authorNames);
     }
 
+    @GetMapping("/get/filter/byDate")
+    public List<Post> getPostByAuthor(@RequestParam LocalDateTime[] date){
+        return this.postService.filterByDate(date);
+    }
+
     @GetMapping("/get/filter/date")
     public Set<LocalDateTime> getDateForFilter()
     {
@@ -77,21 +82,7 @@ public class PostController {
     @GetMapping("/search/{keyword}")
     public List<Post> findByKeyword(@PathVariable String keyword)
     {
-        System.out.println("hello");
-        try {
             return this.postService.findByKeyword(keyword);
-
-        }
-        catch (Exception e)
-        {
-            System.out.println( "Error calling function "+ e.getLocalizedMessage());
-            throw new DataNotFoundException( "Error calling function "+ e.getLocalizedMessage());
-        }
     }
-//    @GetMapping()
-//    public List<PostDto> getPostListBySort(@RequestParam String searchField, @RequestParam String order,
-//                                           @RequestParam(defaultValue = "0") int page,
-//                                           @RequestParam(defaultValue = "10") int size){
-//        return null;
-//    }
+
 }

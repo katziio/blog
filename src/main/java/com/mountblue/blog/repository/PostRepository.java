@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -67,6 +68,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     @Query("SELECT p FROM Post p WHERE CONCAT(p.title,' ', p.content,' ', p.author) LIKE %?1%")
     public List<Post> searchByKeyword(String keyword);
+
+    @Query("select post from Post post WHERE post.createdAt IN :date")
+    List<Post> findByDate(@Param("date") LocalDateTime[] date);
 
 //    @Query("select post from Post post join post.tags tag " +
 //            "where post.isPublished = true and " +
