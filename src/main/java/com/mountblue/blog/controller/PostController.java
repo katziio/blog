@@ -1,88 +1,87 @@
 package com.mountblue.blog.controller;
 
-import com.mountblue.blog.entity.Post;
-import com.mountblue.blog.exception.DataNotFoundException;
-import com.mountblue.blog.model.PostDto;
-import com.mountblue.blog.service.post.PostServiceImpl;
+import com.mountblue.blog.dto.PageDto;
+import com.mountblue.blog.dto.PostDto;
+import com.mountblue.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
-@RestController
-@RequestMapping("/post")
+@Controller
 public class PostController {
     @Autowired
-    private PostServiceImpl postService;
+    private PostService postService;
 
-    @PostMapping("/add")
-    public PostDto addPost(@RequestBody Post post){
-        return this.postService.addPost(post);
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/posts";
     }
 
-    @PutMapping("/update")
-    public PostDto updatePost(@RequestBody Post post){
-        return this.postService.updatePost(post);
+    @PreAuthorize("hasAnyRole('AUTHOR','ADMIN')")
+    @PostMapping("/posts/save")
+    public String savePost(@ModelAttribute PostDto postDto) {
+        long postId = postService.getSavedPostId(postDto);
+        return "redirect:/posts/" + postId;
     }
 
-    @DeleteMapping("/delete/{postId}")
-    public PostDto deletePost(@PathVariable Long postId){
-       return this.postService.deletePost(postId);
+    @GetMapping("/posts")
+    public String viewHomePage(@RequestParam(name = "search", required = false) String search,
+                               @RequestParam(name = "page", defaultValue = "1", required = false) int page,
+                               @RequestParam(name = "sort", defaultValue = "id", required = false) String sortBy,
+                               @RequestParam(name = "authors", required = false) List<String> authors,
+                               @RequestParam(name = "tags", required = false) List<String> tags,
+                               @RequestParam(name = "date", required = false) LocalDate date,
+                               Model model) {
+        PageDto pageDto = new PageDto();
+        pageDto.setSearch(search);
+        pageDto.setPage(page);
+        pageDto.setSortBy(sortBy);
+        pageDto.setAuthors(authors);
+        pageDto.setTags(tags);
+        pageDto.setDate(date);
+
+        model.addAttribute("posts", postService.fetchPosts(pageDto));
+        return "index";
     }
 
-    @GetMapping("/get")
-    public List<PostDto> getPostList(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size,
-                                     @RequestParam(defaultValue = "author") String sortBy,
-                                     @RequestParam(defaultValue = "asc") String orderBy){
-       return this.postService.getPostLists(page,size,sortBy,orderBy);
-    }
-
-    @GetMapping("/get/{postId}")
-    public PostDto getPost(@PathVariable  Long postId)
-    {
-        return this.postService.findPostById(postId);
-    }
-
-    @GetMapping("/get/filter")
-    public List<PostDto> getPostByTagNames(@RequestParam String[] tagsNames){
-        return this.postService.filterByTagsNames(tagsNames);
-    }
-    @GetMapping("/get/filter/byAuthor")
-    public List<PostDto> getPostByAuthor(@RequestParam String[] authorNames){
-        return this.postService.filterByAuthor(authorNames);
-    }
-
-    @GetMapping("/get/filter/byDate")
-    public List<PostDto> getPostByAuthor(@RequestParam LocalDateTime[] date){
-        return this.postService.filterByDate(date);
-    }
-
-    @GetMapping("/get/filter/date")
-    public Set<LocalDateTime> getDateForFilter()
-    {
-        return this.postService.getDateList();
-    }
-
-    @GetMapping("/get/filter/author")
-    public Set<String> getAuthorForFilter()
-    {
-        return this.postService.getAuthorNameList();
-    }
-
-    @GetMapping("/get/filter/tags")
-    public Set<String> getTagForFilter()
-    {
-        return this.postService.getTagNameList();
+    @PreAuthorize("hasAnyRole('AUTHOR','ADMIN')")
+    @GetMapping("/posts/new")
+    public String newPost() {
+        return "newpost";
     }
 
 
-    @GetMapping("/search/{keyword}")
-    public List<PostDto> findByKeyword(@PathVariable String keyword)
-    {
-            return this.postService.findByKeyword(keyword);
+    @GetMapping("/posts/{id}")
+    public String getPostById(@PathVariable long id, Model model) {
+        model.addAttribute("blog", postService.getPostById(id));
+        return "blog";
     }
 
+    @PreAuthorize("(hasRole('AUTHOR') and @postService.checkAuthor(#id)) or hasRole('ADMIN')")
+    @PostMapping("/posts/{id}/update")
+    public String updateEditedPost(@PathVariable long id,
+                                   @ModelAttribute PostDto postDto) {
+        postDto.setPostId(id);
+        postService.updatePost(postDto);
+        return "redirect:/posts/" + id;
+    }
+
+    @PreAuthorize("(hasRole('AUTHOR') and @postService.checkAuthor(#id)) or hasRole('ADMIN')")
+    @GetMapping("/posts/{id}/edit")
+    public String editPost(@PathVariable int id, Model model) {
+        model.addAttribute("blog", postService.getPostById(id));
+        return "newpost";
+    }
+
+    @PreAuthorize("(hasRole('AUTHOR') and @postService.checkAuthor(#id)) or hasRole('ADMIN')")
+    @PostMapping("/posts/{id}/delete")
+    public String deletePost(@PathVariable long id) {
+        postService.deletePostById(id);
+        return "redirect:/posts";
+    }
 }

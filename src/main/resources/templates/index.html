@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Blog Application</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+</head>
+<body>
+<header>
+    <div class="left">
+        <h1 th:onclick="|window.location.href='/posts'|">My Blog Application</h1>
+    </div>
+    <div class="right">
+        <form action="/posts">
+            <input type="search" placeholder="search" name="search">
+            <input type="hidden" name="sort" th:if="${not #strings.isEmpty(posts.sortBy) and posts.sortBy != 'id'}"
+                   th:value="${posts.sortBy}"/>
+            <input type="hidden" name="date" th:if="${posts.date!=null and posts.date!=''}" th:value="${posts.date}"/>
+            <input type="hidden" name="authors" th:if="${posts.authors!=null}" th:field="*{posts.authors}"/>
+            <input type="hidden" name="tags" th:if="${posts.tags!=null}" th:field="*{posts.tags}"/>
+        </form>
+        <form>
+            <a href="/posts/new">New Post</a>
+            <a href="/login" th:unless="${#authorization.expression('isAuthenticated()')}">Login</a>
+            <a href="/logout" th:if="${#authorization.expression('isAuthenticated()')}">Logout</a>
+        </form>
+    </div>
+</header>
+<section id="body_Content">
+    <section class="content_left">
+        <div class="blogContainer">
+            <div th:each="blog : ${posts.blogs}" class="blog-card"
+                 th:onclick="|window.location.href='/posts/@{${blog.postId}}'|">
+                <h2 th:text="${blog.title}" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                </h2>
+                <div th:text="${blog.publishedAt}"></div>
+                <p th:text="${blog.content}"
+                   style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"></p>
+            </div>
+        </div>
+        <div id="paginationContainer">
+            <form class="prevForm" th:if="${posts.page > 1}"
+                  th:action="@{/posts(page=${posts.page - 1})}" method="get">
+                <input type="hidden" name="page" th:value="${posts.page - 1}"/>
+                <input type="hidden" name="search" th:if="${not #strings.isEmpty(posts.search)}"
+                       th:value="${posts.search}"/>
+                <input type="hidden" name="sort" th:if="${not #strings.isEmpty(posts.sortBy) and posts.sortBy != 'id'}"
+                       th:value="${posts.sortBy}"/>
+                <input type="hidden" name="date" th:if="${posts.date != null and posts.date != ''}"
+                       th:value="${posts.date}"/>
+                <input type="hidden" name="authors" th:if="${posts.authors!=null}" th:field="*{posts.authors}"/>
+                <input type="hidden" name="tags" th:if="${posts.tags!=null}" th:field="*{posts.tags}"/>
+                <button type="submit" class="previousButton">Previous</button>
+            </form>
+            <form class="nextFrom" th:if="${posts.page < posts.totalPages}"
+                  th:action="@{/posts(page=${posts.page + 1})}" method="get">
+                <input type="hidden" name="page" th:value="${posts.page + 1}"/>
+                <input type="hidden" name="search" th:if="${not #strings.isEmpty(posts.search)}"
+                       th:value="${posts.search}"/>
+                <input type="hidden" name="sort" th:if="${not #strings.isEmpty(posts.sortBy) and posts.sortBy != 'id'}"
+                       th:value="${posts.sortBy}"/>
+                <input type="hidden" name="date" th:if="${posts.date != null and posts.date != ''}"
+                       th:value="${posts.date}"/>
+                <input type="hidden" name="authors" th:if="${posts.authors!=null}" th:field="*{posts.authors}"/>
+                <input type="hidden" name="tags" th:if="${posts.tags!=null}" th:field="*{posts.tags}"/>
+                <button type="submit" class="nextButton">Next ></button>
+            </form>
+        </div>
+    </section>
+    <section class="content_Right">
+        <div class="sort">
+            <form action="/posts" method="get">
+                <select type="" name="sort" onchange="this.form.submit()">
+                    <option value="">Sort</option>
+                    <option value="publishedAt" th:selected="${posts.sortBy == 'publishedAt'}">by published date
+                    </option>
+                    <option value="updatedAt" th:selected="${posts.sortBy == 'updatedAt'}">by updated date</option>
+                    <option value="title" th:selected="${posts.sortBy == 'title'}">by title</option>
+                </select>
+                <input type="hidden" name="search" th:if="${not #strings.isEmpty(posts.search)}"
+                       th:value="${posts.search}"/>
+                <input type="hidden" name="date" th:if="${posts.date != null and posts.date != ''}"
+                       th:value="${posts.date}"/>
+                <input type="hidden" name="authors" th:if="${posts.authors!=null}" th:field="*{posts.authors}"/>
+                <input type="hidden" name="tags" th:if="${posts.tags!=null}" th:field="*{posts.tags}"/>
+            </form>
+        </div>
+        <form action="/posts">
+            <div id="list1" class="dropdown-check-list" tabindex="100">
+                <span>Filter By</span>
+                <span class="anchor">Select Authors</span>
+                <ul class="items">
+                    <li th:each="author : ${posts.totalAuthors}">
+                        <input type="checkbox" th:value="${author}" th:name="authors"
+                               th:checked="${posts.authors == null ? 'false' : (posts.authors.contains(author) ? 'true' : 'false')}"/>
+                        <label th:text="${author}"></label>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="list2" class="dropdown-check-list" tabindex="101">
+                <span class="anchor">Select Tags</span>
+                <ul class="items">
+                    <li th:each="tag : ${posts.totalTags}">
+                        <input type="checkbox" th:value="${tag}" th:name="tags"
+                               th:checked="${posts.tags == null ? 'false' : (posts.tags.contains(tag) ? 'true' : 'false')}"/>
+                        <label th:text="${tag}"></label>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <input type="hidden" name="search" th:if="${not #strings.isEmpty(posts.search)}"
+                       th:value="${posts.search}"/>
+                <input type="hidden" name="sort" th:if="${not #strings.isEmpty(posts.sortBy) and posts.sortBy != 'id'}"
+                       th:value="${posts.sortBy}"/>
+                <input type="hidden" name="date" th:if="${posts.date != null and posts.date != ''}"
+                       th:value="${posts.date}"/>
+                <input type="submit" placeholder="filter">
+            </div>
+        </form>
+        <form>
+            <div>
+                <input type="date" class="date_Input" name="date" onchange="this.form.submit()">
+                <input type="hidden" name="authors" th:if="${posts.authors!=null}" th:field="*{posts.authors}"/>
+                <input type="hidden" name="tags" th:if="${posts.tags!=null}" th:field="*{posts.tags}"/>
+                <input type="hidden" name="search" th:if="${not #strings.isEmpty(posts.search)}"
+                       th:value="${posts.search}"/>
+                <input type="hidden" name="sort" th:if="${not #strings.isEmpty(posts.sortBy) and posts.sortBy != 'id'}"
+                       th:value="${posts.sortBy}"/>
+            </div>
+        </form>
+    </section>
+</section>
+<script type="text/javascript" th:src="@{/js/index.js}"></script>
+</body>
+</html>

@@ -1,45 +1,40 @@
 package com.mountblue.blog.controller;
 
-import com.mountblue.blog.entity.User;
-import com.mountblue.blog.model.UserDto;
-import com.mountblue.blog.service.user.UserServiceImpl;
+import com.mountblue.blog.dto.UserDto;
+import com.mountblue.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/user")
+@Controller
 public class UserController {
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
-    @PostMapping("/signup")
-    public UserDto signUp(User user)
-    {
-        return this.userService.addUser(user);
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
+    }
+
+    @PostMapping("/signup/user")
+    public String addUser(@ModelAttribute UserDto userDto, Model model) {
+        try {
+            userService.addUser(userDto);
+        } catch (Exception e) {
+            model.addAttribute("exists", "An account for that email already exists");
+            return "signup";
+        }
+        return "login";
     }
 
     @GetMapping("/login")
-    public UserDto login(@RequestParam String email,@RequestParam String password)
-    {
-        return this.userService.login(email,password);
+    public String login() {
+        return "login";
     }
 
-    @GetMapping("/get/{userId}")
-    public UserDto getUser(Long userId)
-    {
-        return this.userService.getUserById(userId);
+    @RequestMapping("/accessdenied")
+    public String accessDenied() {
+        return "accessdenied";
     }
-
-    @PutMapping("/update")
-    public UserDto updateUser(User user)
-    {
-        return this.userService.updateUser(user);
-    }
-
-    @DeleteMapping("/delete/{userId}")
-    public UserDto deleteUser(Long userId)
-    {
-        return this.userService.deleteUser(userId);
-    }
-
 }
