@@ -1,0 +1,40 @@
+        *,
+        *::after,
+        ::before {
+            outline: none;
+            margin: 1rem;
+            padding: none;
+        }
+
+        header {
+            text-align: center;
+        }
+        main{
+            margin-top: 3rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        form input {
+            height: 2rem;
+            font-size: 1.25rem;
+            padding: 0 1rem;
+        }
+
+        textarea {
+            min-height: 25rem;
+            font-size: 1.25rem;
+            padding: 0 1rem;
+        }
+
+        .button {
+            width: 5rem;
+            margin: auto;
+            background-color: transparent;
+            height: 2rem;
+            font-size: 1rem;
+            padding: 0;
+        }

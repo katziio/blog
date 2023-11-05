@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Post</title>
+    <link rel="stylesheet" th:href="@{/css/blog.css}"/>
+</head>
+<body>
+<header>
+    <div class="left">
+        <h2 th:onclick="|window.location.href='/posts'|">My Blog Application</h2>
+    </div>
+    <div class="right">
+        <form>
+            <a href="/login" th:unless="${#authorization.expression('isAuthenticated()')}">Login</a>
+            <a href="/logout" th:if="${#authorization.expression('isAuthenticated()')}"> Logout</a>
+        </form>
+    </div>
+</header>
+<section class="editPost">
+    <form>
+        <a th:href="@{/posts/{id}/edit(id=${blog.postId})}"
+           sec:authorize="!isAuthenticated() or hasRole('ROLE_ADMIN') or (hasRole('ROLE_AUTHOR') and #vars.blog.checkAuthor)">Edit</a>
+    </form>
+    <form th:action="@{/posts/{id}/delete(id=${blog.postId})}" method="post">
+        <button onclick="return confirm('Are you sure you want to delete this post?')"
+                sec:authorize="!isAuthenticated() or hasRole('ROLE_ADMIN') or (hasRole('ROLE_AUTHOR') and #vars.blog.checkAuthor)">
+            Delete
+        </button>
+    </form>
+</section>
+<div class="mainContainer">
+    <h1 th:text="${blog.title}" class="center">Hello</h1>
+    <div class="author">
+        <p th:text="${blog.author}" class="center author"></p>
+        <p>,</p>
+        <p th:text="${#dates.format(blog.publishedAt, 'dd/MMM/yyyy')}" class="center date"></p>
+    </div>
+    <div th:text="${blog.content}" class="blogContent"></div>
+</div>
+<div class="tagContainer">
+  <span th:each="tags : ${blog.postAndTag}" class="commentCard">
+    <span th:text="${tags.tag.name}" class="tags"></span>
+  </span>
+</div>
+<h3>Comments</h3>
+<div class="commentsContainer">
+    <div th:each="comment : ${blog.comments}" class="comment" th:onclick="">
+        <h4>
+            <span th:text="${comment.name}"></span>
+            <span>
+                <a th:href="${'/posts/'+blog.postId+'/comment/'+comment.id+'/edit'}"
+                   sec:authorize="!isAuthenticated() or hasRole('ROLE_ADMIN') or (hasRole('ROLE_AUTHOR') and #vars.blog.checkAuthor)">Edit</a>
+            <form th:action="@{/posts/{postId}/comment/{commentId}/delete(postId=${blog.postId},commentId=${comment.id})}"
+                  method="post">
+                 <button onclick="return confirm('Are you sure you want to delete this comment?')"
+                         sec:authorize="!isAuthenticated() or hasRole('ROLE_ADMIN') or (hasRole('ROLE_AUTHOR') and #vars.blog.checkAuthor)">Delete</button>
+            </form>
+        </span>
+        </h4>
+        <p th:text="${comment.comment}"></p>
+    </div>
+    <div>
+        <a th:href="${'/posts/'+blog.postId+'/comment/new'}">New Comment</a>
+    </div>
+</div>
+</body>
+</html>

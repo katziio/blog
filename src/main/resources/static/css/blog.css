@@ -1,0 +1,78 @@
+    *,
+    *::after,
+    *::before {
+		padding: none;
+		margin:0;
+		outline: none;
+		box-sizing: border-box;
+		text-decoration: none;
+	}
+	header{
+		display: flex;
+		justify-content: space-between;
+		padding: 1rem 2rem;
+	}
+    header h2{
+        font-size: 2rem;
+        cursor:pointer;
+    }
+    header a{
+        margin-left: 1rem;
+        font-weight: 500;
+        font-size: 1.7rem;
+    }
+	body{
+		overflow-x:hidden;
+		width:100vw;
+		padding: 1rem;
+	}
+
+	.center{
+		margin: auto;
+		text-align: center;
+	}
+	a{
+		color: rgb(63, 191, 255);
+	}
+	h1{
+		font-size: 3rem;
+		font-style: italic;
+		font-weight: 500;
+	}
+
+	.author{
+		width: fit-content;
+		margin: auto;
+	}
+	.mainContainer p{
+		display: inline-block;
+		margin: auto;
+	}
+	.author{
+	  font-size:1.25rem;
+	}
+	.date{
+	  font-size:1.1rem;
+	}
+	.blogContent{
+		width: fit-content;
+		margin: 1rem auto;
+		padding: 1rem;
+		line-height: 1.5rem;
+		font-size: 1.25rem;
+	}
+    .editPost{
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -0.5rem;
+        margin-bottom: 2rem;
+    }
+    .editPost *{
+        margin-left: 1.5rem;
+        font-size: 1.25rem;
+    }
+    input[type="submit"]
+    {
+        width: 50%;
+        max-width: 50%;
+    }

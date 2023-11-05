@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post</title>
+    <link rel="stylesheet" th:href="@{/css/newpost.css}"/>
+</head>
+<body>
+<header>
+    <h1 th:text="${blog!=null ? 'Edit Post' : 'New Post'}"></h1>
+</header>
+<main id="main">
+    <form th:if="${blog == null}" th:action=@{'/posts/save'} method="post" id="form">
+        <input type="text " placeholder="Title" name="title" required>
+        <input type="text" name="tags" pattern="\s*#[A-Za-z0-9_]+(\s*#[A-Za-z0-9_]+\s*)*\s*" placeholder="start tags with '#' and space in between tags"/>
+        <textarea type="text" name="content" placeholder="Enter" required></textarea>
+        <input type="submit" class="button" value="Publish">
+    </form>
+    <form th:if="${blog != null}" th:action="${'/posts/'+blog.postId+'/update'}" method="post" id="for">
+        <input type="text " placeholder="Title" name="title" th:value="${blog.title}" required>
+        <input type="text" name="tags" pattern="#[A-Za-z0-9_]+(\s*#[A-Za-z0-9_]+)*" placeholder="tags"
+               th:value="${blog.tags}"/>
+        <textarea type="text" name="content" placeholder="Enter" th:text="${blog.content}" required></textarea>
+        <input type="submit" class="button" value="Publish">
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Comment</title>
+    <link rel="stylesheet" th:href="@{/css/comment.css}"/>
+</head>
+<body>
+<div class="container">
+    <h3 th:text="${comment != null ? 'Edit Comment' : 'New Comment'}"></h3>
+    <form th:if="${comment == null}" th:action="${'/posts/'+id+'/comment/save'}" class="commentsContainer"
+          method="post">
+        <input placeholder="name" type="text" name="name" required>
+        <input placeholder="email" type="email" name="email" required>
+        <textarea placeholder="add comment" name="comment" id="new" cols="30" rows="5" required></textarea>
+        <input type="submit" class="button">
+    </form>
+    <form th:if="${comment != null}" th:action="${'/posts/'+id+'/comment/update'}" class="commentsContainer"
+          method="post">
+        <input type="hidden" th:value="${comment.commentId}" name="commentId">
+        <textarea th:text="${comment.comment}" name="comment" id="edit" cols="30" rows="5" required></textarea>
+        <input type="submit" class="button">
+    </form>
+</div>
+</body>
+</html>
