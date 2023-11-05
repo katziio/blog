@@ -6,7 +6,6 @@ import com.mountblue.blog.model.*;
 import com.mountblue.blog.repository.PostAndTagsRepository;
 import com.mountblue.blog.repository.PostsRepository;
 import com.mountblue.blog.repository.TagsRepository;
-import com.surendra.BlogApplication.model.*;
 import com.mountblue.blog.repository.UserInfoRepository;
 import com.mountblue.blog.specification.PostSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
