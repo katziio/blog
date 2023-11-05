@@ -8,8 +8,8 @@
         <version>3.1.0</version>
         <relativePath/>
     </parent>
-    <groupId>com.surendra</groupId>
-    <artifactId>BlogApplication</artifactId>
+    <groupId>com.mountblue</groupId>
+    <artifactId>blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>BlogApplication</name>
     <description>Spring Boot Blog Application</description>
